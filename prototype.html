@@ -1,55 +1,39 @@
-<html>
+<!DOCTYPE html>
 	<head>
 		<title>journey</title>		
-		<script src="http://maps.googleapis.com/maps/api/js"></script>
-		<script>
-		var map;
-		function initialize() {
-  			var mapProp = {
-    			center:new google.maps.LatLng(39.828127,-98.579404), zoom:5, mapTypeId:google.maps.MapTypeId.ROADMAP
-    		};
-
-  			map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-
-  			google.maps.event.addListener(map, 'click', function(event) {
-  				placeMarker(event.latLng);
-  			});
-  		}
-		
-		function placeMarker(location) {
-  			var marker = new google.maps.Marker({
-    			position: location,
-    			map: map,
-  			});
-
-  			var infowindow = new google.maps.InfoWindow({
-    			content: '<p>Event: </p><p>Description:</p>'
-  			});
-  			
-  			google.maps.event.addListener(marker, 'click', function() {
-    			infowindow.open(map,marker);
-  			});
-
-  			overlay();  		
-		}
-
-		function overlay() {
-			el = document.getElementById("overlay");
-			el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-		}	
-
-		google.maps.event.addDomListener(window, 'load', initialize);
-		
-		</script>
+    <script src="js/modernizr.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/foundation.min.css">
 	</head>
 
 	<body>
-		<div id="googleMap" style="width:1000px;height:700px;"></div>	
-		<div id="overlay">
-     		<div>
-          	<p>Content you want the user to see goes here.</p>
-     		</div>
+		<div id="googleMap" style="width:1000px;height:700px;"></div>
+		<div>
+     		<a href="#" data-reveal-id="modal-form">Click Me For A Modal</a> 
+
+        <div id="modal-form" class="reveal-modal" data-reveal> 
+          <h2>Tell us about what happened.</h2>
+          <form>
+            What was the event?<br />
+            <input type="text" name="event-name"><br />
+            When was this?<br />
+            <input type="month" name="year"><br />
+            Tell us a little more.<br />
+            <textarea name="details" cols="50" rows="5"></textarea><br />
+            <input type="submit" value="Post Event" name="submit">
+          <a class="close-reveal-modal">&#215;</a> 
+        </div>
 		</div>	
-	</body>
+
+
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/fastclick.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script src="js/custom.js"></script>
+
+    <script> 
+      $(document).foundation(); 
+    </script>
+  </body>
 
 </html>
