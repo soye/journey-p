@@ -7,19 +7,20 @@
 
 	<body>
 		<div id="googleMap" style="width:1000px;height:700px;"></div>
-		<div>
-     		<a href="#" data-reveal-id="modal-form">Click Me For A Modal</a> 
+		<div id="overlay">
+     		<a href="#" data-reveal-id="modal-form" style="display:none">Click Me For A Modal</a> 
 
         <div id="modal-form" class="reveal-modal" data-reveal> 
           <h2>Tell us about what happened.</h2>
-          <form>
+          <form id="form">
             What was the event?<br />
-            <input type="text" name="event-name"><br />
+            <input type="text" id="event-name"><br />
             When was this?<br />
-            <input type="month" name="year"><br />
+            <input type="month" id="year"><br />
             Tell us a little more.<br />
-            <textarea name="details" cols="50" rows="5"></textarea><br />
-            <input type="submit" value="Post Event" name="submit">
+            <textarea id="details" cols="50" rows="5"></textarea><br />
+            <!--<input type="submit" value="Post Event" name="submit">-->
+            <button type="button" onclick="postEntry(this);" id="submit">Post Entry</button>
           <a class="close-reveal-modal">&#215;</a> 
         </div>
 		</div>	

@@ -12,26 +12,38 @@ function initialize() {
 	google.maps.event.addListener(map, 'click', function(event) {
 		placeMarker(event.latLng);
 	});
+
 }
+
+var currentMarker;
 
 function placeMarker(location) {
 	var marker = new google.maps.Marker({
 		position: location,
 		map: map
 	});
+	currentMarker = marker;
 
-  // opens the form
-  $('#modal-form').foundation('reveal', 'open');
-
-	var infowindow = new google.maps.InfoWindow({
-		content: '<p>Event: </p><p>Description:</p>'
-	});
-	
-	google.maps.event.addListener(marker, 'click', function(e) {
-		infowindow.open(map,marker);
-	});
+	// opens the form
+	$('#form').trigger("reset");
+	$('#modal-form').foundation('reveal', 'open');
 
 	overlay();  		
+}
+
+function postEntry() {
+	$('#modal-form').foundation('reveal', 'close');
+
+  infowindow = new google.maps.InfoWindow({
+    content: '<h4>' + $("#event-name").val() + '</h4>' +
+    		'<p><b>Year:</b> ' + $("#year").val() + '</p>' +
+    		'<p>' + $("#details").val() + '</p>'
+  });
+
+  thisMarker = currentMarker;
+  google.maps.event.addListener(thisMarker, 'click', function(e) {
+	infowindow.open(map, thisMarker);
+  });
 }
 
 
