@@ -25,9 +25,7 @@ function placeMarker(location) {
 	$('#form').trigger("reset");
 	$('#modal-form').foundation('reveal', 'open');
 
-	currentLocation = location;
-
-	overlay();  		
+	currentLocation = location;		
 }
 
 function postEntry() {
@@ -51,11 +49,5 @@ function postEntry() {
 		openInfoWindow = infowindow;
 	});
 }
-
-
-function overlay() {
-	el = document.getElementById("overlay");
-	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-}	
 
 google.maps.event.addDomListener(window, 'load', initialize);
