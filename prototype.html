@@ -3,10 +3,11 @@
 		<title>journey</title>		
     <script src="js/modernizr.js"></script>
     <link rel="stylesheet" type="text/css" href="css/foundation.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 
 	<body>
-		<div id="googleMap" style="width:1000px;height:700px;"></div>
+		<div id="googleMap" style="width:100%;height:100%;"></div>
 		<div id="overlay">
      		<a href="#" data-reveal-id="modal-form" style="display:none">Click Me For A Modal</a> 
 
@@ -19,7 +20,6 @@
             <input type="month" id="year"><br />
             Tell us a little more.<br />
             <textarea id="details" cols="50" rows="5"></textarea><br />
-            <!--<input type="submit" value="Post Event" name="submit">-->
             <button type="button" onclick="postEntry(this);" id="submit">Post Entry</button>
           <a class="close-reveal-modal">&#215;</a> 
         </div>

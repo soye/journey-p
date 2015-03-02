@@ -4,11 +4,11 @@
 }
 
 body {
-	font-family: serif;
 	background-repeat: no-repeat;
 }
 
-#id {
+img[src*="gstatic.com/"], img[src*="googleapis.com/"] {
+    max-width: none;
 }
 
 #overlay {
@@ -26,10 +26,10 @@ body {
 }
 
 #overlay div {
-     width:300px;
-     margin: 100px auto;
-     background-color: #fff;
-     border:1px solid #000;
-     padding:15px;
-     text-align:center;
+    width:300px;
+    margin: 100px auto;
+    background-color: #fff;
+    border:1px solid #000;
+    padding:15px;
+    text-align:center;
 }
