@@ -158,9 +158,14 @@ function startJourney() {
 
 	google.maps.event.removeListener(placeMarkerListener);
 	removeAllLines();
+	$("#btnStartJourney").attr("disabled", "disabled");
+	$("#btnExitJourney").removeAttr("disabled");
 	numChapter = 0;
 
-	$("body").click(function(e) {
+	focusOnChapter(numChapter);
+	numChapter++;
+
+	$("#googleMap").click(function(e) {
 		if (numChapter > 0) {
 			createDashedLine(allEvents[numChapter - 1].marker.getPosition(), allEvents[numChapter].marker.getPosition());
 			bounds = new google.maps.LatLngBounds();
@@ -171,22 +176,26 @@ function startJourney() {
 
 		focusOnChapter(numChapter);
 
-
 		numChapter++;
-		if (numChapter >= allEvents.length) {
+		if (numChapter >= allEvents.length)
 			endJourney();
-		}
 	});
+
+	$("")
 }
 
 function endJourney() {
+	redrawLines();
 	placeMarkerListener = google.maps.event.addListener(map, 'click', function(event) {
 		if (openInfoWindow) 
 			openInfoWindow.close();
 		placeMarker(event.latLng);
 	});
 
-	$("body").off("click");
+
+	$("#googleMap").off("click");
+	$("#btnStartJourney").removeAttr("disabled");
+	$("#btnExitJourney").attr("disabled", "disabled");
 }
 
 function focusOnChapter(index) {

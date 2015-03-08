@@ -10,8 +10,9 @@
 	<body>
     <div id="header">
       <h1>journey</h1>
-      <button type="button" class="btn btn-default" onclick="showAll();">View Entire Journey</button>&nbsp;
-      <button type="button" class="btn btn-success" onclick="startJourney();">Start Journey</button>
+      <button type="button" id="btnViewEntireJourney" class="btn btn-default" onclick="showAll();">View Entire Journey</button>&nbsp;
+      <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Start Journey</button>&nbsp;
+      <button type="button" id="btnExitJourney" class="btn btn-warning" onclick="endJourney();" disabled="disabled">Exit Journey</button>
     </div>
 
 		<div id="googleMap"></div>
@@ -27,7 +28,7 @@
             <input type="month" id="year"><br />
             Tell us a little more.<br />
             <textarea id="details" cols="50" rows="5"></textarea><br />
-            <button type="button" onclick="postEntry(this);" id="submit">Post Entry</button>
+            <button type="button" class="btn btn-success" onclick="postEntry(this);" id="submit">Post Entry</button>
           <a class="close-reveal-modal">&#215;</a> 
         </div>
 		</div>	
