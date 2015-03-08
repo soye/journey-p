@@ -3,6 +3,7 @@ var openInfoWindow = null;
 var currentLocation = null;
 var lastMarker = null;
 var allEvents = [];
+var allLines = [];
 
 
 function initialize() {
@@ -12,7 +13,7 @@ function initialize() {
     	mapTypeId:google.maps.MapTypeId.ROADMAP
 	};
 
-	map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+	map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
 	google.maps.event.addListener(map, 'click', function(event) {
 		if (openInfoWindow) 
@@ -42,7 +43,6 @@ function initialize() {
 	    ]
 	  }
 	];
-
 	map.setOptions({styles: styles});
 
 }
@@ -93,6 +93,9 @@ function postEntry() {
 }
 
 function redrawLines() {
+	for (var i = 0; i < allLines.length; i++)
+		allLines[i].setMap(null);
+
 	for (var index = 1; index < allEvents.length; index++)
 		createDashedLine(allEvents[index - 1].marker.getPosition(), allEvents[index].marker.getPosition());
 }
@@ -124,6 +127,16 @@ function createDashedLine(fromPos, toPos) {
 		map: map
 	});
 
+	allLines[allLines.length] = line;
+
+}
+
+// zoom out the map such that all markers are shown
+function showAll() {
+	bounds = new google.maps.LatLngBounds();
+	for (var i = 0, len = allEvents.length; i < len; i++)
+		bounds.extend(allEvents[i].marker.getPosition());
+	map.fitBounds(bounds);
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
