@@ -180,8 +180,6 @@ function startJourney() {
 		if (numChapter >= allEvents.length)
 			endJourney();
 	});
-
-	$("")
 }
 
 function endJourney() {
@@ -191,7 +189,6 @@ function endJourney() {
 			openInfoWindow.close();
 		placeMarker(event.latLng);
 	});
-
 
 	$("#googleMap").off("click");
 	$("#btnStartJourney").removeAttr("disabled");
