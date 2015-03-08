@@ -1,9 +1,11 @@
 var map = null;
+var numChapter = 0;
 var openInfoWindow = null;
 var currentLocation = null;
 var lastMarker = null;
 var allEvents = [];
 var allLines = [];
+var placeMarkerListener = null;
 
 
 function initialize() {
@@ -15,7 +17,7 @@ function initialize() {
 
 	map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
-	google.maps.event.addListener(map, 'click', function(event) {
+	placeMarkerListener = google.maps.event.addListener(map, 'click', function(event) {
 		if (openInfoWindow) 
 			openInfoWindow.close();
 		placeMarker(event.latLng);
@@ -93,11 +95,15 @@ function postEntry() {
 }
 
 function redrawLines() {
-	for (var i = 0; i < allLines.length; i++)
-		allLines[i].setMap(null);
+	removeAllLines();
 
 	for (var index = 1; index < allEvents.length; index++)
 		createDashedLine(allEvents[index - 1].marker.getPosition(), allEvents[index].marker.getPosition());
+}
+
+function removeAllLines() {
+	for (var i = 0; i < allLines.length; i++)
+		allLines[i].setMap(null);
 }
 
 function createDashedLine(fromPos, toPos) {
@@ -131,12 +137,60 @@ function createDashedLine(fromPos, toPos) {
 
 }
 
-// zoom out the map such that all markers are shown
+/* showAll()
+ * ---------
+ * Zoom out the map such that all markers are shown. */
 function showAll() {
-	bounds = new google.maps.LatLngBounds();
-	for (var i = 0, len = allEvents.length; i < len; i++)
-		bounds.extend(allEvents[i].marker.getPosition());
-	map.fitBounds(bounds);
+	if (allEvents.length > 0) {
+		bounds = new google.maps.LatLngBounds();
+		for (var i = 0, len = allEvents.length; i < len; i++)
+			bounds.extend(allEvents[i].marker.getPosition());
+		map.fitBounds(bounds);
+	}
+}
+
+/* startJourney()
+ * --------------
+ * Commence animation through entire journey. */
+function startJourney() {
+	if (allEvents.length < 1) 
+		return;
+
+	google.maps.event.removeListener(placeMarkerListener);
+	removeAllLines();
+	numChapter = 0;
+
+	$("body").click(function(e) {
+		if (numChapter > 0) {
+			createDashedLine(allEvents[numChapter - 1].marker.getPosition(), allEvents[numChapter].marker.getPosition());
+			bounds = new google.maps.LatLngBounds();
+			bounds.extend(allEvents[numChapter].marker.getPosition());
+			bounds.extend(allEvents[numChapter - 1].marker.getPosition());
+			map.fitBounds(bounds);
+		}
+
+		focusOnChapter(numChapter);
+
+
+		numChapter++;
+		if (numChapter >= allEvents.length) {
+			endJourney();
+		}
+	});
+}
+
+function endJourney() {
+	placeMarkerListener = google.maps.event.addListener(map, 'click', function(event) {
+		if (openInfoWindow) 
+			openInfoWindow.close();
+		placeMarker(event.latLng);
+	});
+
+	$("body").off("click");
+}
+
+function focusOnChapter(index) {
+	map.setCenter(allEvents[index].marker.getPosition());
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
