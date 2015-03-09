@@ -12,13 +12,12 @@
       <h1>journey</h1>
       <button type="button" id="btnViewEntireJourney" class="btn btn-default" onclick="showAll();">View Entire Journey</button>&nbsp;
       <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Start Journey</button>&nbsp;
-      <button type="button" id="btnExitJourney" class="btn btn-warning" onclick="endJourney();" disabled="disabled">Exit Journey</button>
+      <button type="button" id="btnExitJourney" class="btn btn-warning" onclick="endJourney();" disabled="disabled">Return to Editing</button>
     </div>
 
 		<div id="googleMap"></div>
 		<div>
      		<a href="#" data-reveal-id="modal-form" style="display:none"></a> 
-
         <div id="modal-form" class="reveal-modal" data-reveal> 
           <h2>Tell us about what happened.</h2>
           <form id="form">
@@ -29,6 +28,16 @@
             Tell us a little more.<br />
             <textarea id="details" cols="50" rows="5"></textarea><br />
             <button type="button" class="btn btn-success" onclick="postEntry(this);" id="submit">Post Entry</button>
+          </form>
+          <a class="close-reveal-modal">&#215;</a> 
+        </div>
+
+        <a href="#" data-reveal-id="modal-chapter" style="display:none"></a> 
+        <div id="modal-chapter" class="reveal-modal" data-reveal> 
+          <h2>This is a chapter!</h2>
+          <p id="modal-event-name">Event name!</p>
+          <p id="modal-year">This is where the year goes.</p>
+          <p id="modal-details">Details here!</p>
           <a class="close-reveal-modal">&#215;</a> 
         </div>
 		</div>	

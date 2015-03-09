@@ -163,7 +163,6 @@ function startJourney() {
 	numChapter = 0;
 
 	focusOnChapter(numChapter);
-	numChapter++;
 
 	$("#googleMap").click(function(e) {
 		if (numChapter > 0) {
@@ -176,7 +175,6 @@ function startJourney() {
 
 		focusOnChapter(numChapter);
 
-		numChapter++;
 		if (numChapter >= allEvents.length)
 			endJourney();
 	});
@@ -197,6 +195,11 @@ function endJourney() {
 
 function focusOnChapter(index) {
 	map.setCenter(allEvents[index].marker.getPosition());
+	if (openInfoWindow)
+		openInfoWindow.close();
+	allEvents[numChapter].info.open(map, allEvents[numChapter].marker);
+	openInfoWindow = allEvents[numChapter].info;
+	numChapter++;
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
