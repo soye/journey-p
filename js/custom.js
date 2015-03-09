@@ -47,6 +47,19 @@ function initialize() {
 	];
 	map.setOptions({styles: styles});
 
+	// animation of button to next chapter
+	$(document).delegate('#btnNext', 'mouseover', function() {
+	   $(this).fadeTo(500, 1);
+	});
+	$(document).delegate('#btnNext', 'mouseout', function() {
+	   $(this).fadeTo(500, 0.6);
+	});
+
+	// hyperlink to next chapter using next button
+	$("#link-next").click(function(e) {
+		moveToNextChapter();
+	});
+
 	mockUp();
 }
 
@@ -91,40 +104,6 @@ function mockUp() {
 		infowindow.open(map, marker);
 		openInfoWindow = infowindow;
 	});
-
-	// chapter 2
-	/*var infowindow = new google.maps.InfoWindow({
-	content: '<h4>' + $("#event-name").val() + '</h4>' +
-			'<p><b>Year:</b> ' + $("#year").val() + '</p>' +
-			'<p>' + $("#details").val() + '</p>'
-	});
-
-	var marker = new google.maps.Marker({
-		position: currentLocation,
-		map: map
-	});
-
-	var event_entry = {
-		year: $("#year").val(),
-		infowindow: infowindow,
-		marker: marker
-	};
-
-	// new entry is added to all events, array is sorted and lines are redrawn
-	allEvents[allEvents.length] = event_entry;
-	allEvents.sort(function(a, b) {
-		var dateA = new Date(a.year);
-		var dateB = new Date(b.year);
-		return dateA - dateB;
-	});
-	redrawAllLines();
-
-	google.maps.event.addListener(marker, 'click', function(e) {
-		if (openInfoWindow)
-			openInfoWindow.close();
-		infowindow.open(map, marker);
-		openInfoWindow = infowindow;
-	});*/
 }
 
 function placeMarker(location) {
@@ -245,8 +224,6 @@ function startJourney() {
 	$("#btnStartJourney").attr("style", "display:none");
 	$("#btnViewEntireJourney").attr("style", "display:none");
 	$("#header").attr("style", "display:none");
-	//$("#btnExitJourney").removeAttr("style");
-	//$("#btnExitJourney").attr("style", "");
 	$("#overlay").removeAttr("style");
 	numChapter = 0;
 
@@ -256,18 +233,21 @@ function startJourney() {
 		$("#googleMap").click(function(e) {
 			if (e.target.nodeName.toUpperCase() == "A" || e.target.nodeName.toUpperCase() == "BUTTON")
 				return;
-
-			if (numChapter > 0) {
-				createDashedLine(allEvents[numChapter - 1].marker.getPosition(), allEvents[numChapter].marker.getPosition());
-				bounds = new google.maps.LatLngBounds();
-				bounds.extend(allEvents[numChapter].marker.getPosition());
-				bounds.extend(allEvents[numChapter - 1].marker.getPosition());
-				map.fitBounds(bounds);
-			}
-
-			focusOnChapter(numChapter);
+			moveToNextChapter();
 		});
 	}
+}
+
+function moveToNextChapter() {
+	if (numChapter > 0) {
+		createDashedLine(allEvents[numChapter - 1].marker.getPosition(), allEvents[numChapter].marker.getPosition());
+		bounds = new google.maps.LatLngBounds();
+		bounds.extend(allEvents[numChapter].marker.getPosition());
+		bounds.extend(allEvents[numChapter - 1].marker.getPosition());
+		map.fitBounds(bounds);
+	}
+
+	focusOnChapter(numChapter);
 }
 
 /* endJourney()
@@ -284,7 +264,6 @@ function endJourney() {
 	$("#googleMap").off("click");
 	$("a").off("click");
 	$("#header").removeAttr("style");
-	//$("#btnExitJourney").attr("style", "display:none");
 	$("#overlay").attr("style", "display:none");	
 	$("#btnViewEntireJourney").removeAttr("style");
 	$("#btnStartJourney").removeAttr("style");
@@ -310,8 +289,6 @@ function focusOnChapter(index) {
 
 	$("#btnReadMore").click(function(e) {
 		$("#modal-title").text(chapter.title);
-		/*$("#modal-year").text(chapter.year);
-		$("#modal-details").text(chapter.details);*/
 		$('#modal-chapter').foundation('reveal', 'open');
 	});
 
