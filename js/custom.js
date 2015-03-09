@@ -47,6 +47,84 @@ function initialize() {
 	];
 	map.setOptions({styles: styles});
 
+	mockUp();
+}
+
+/* mockUp() 
+ * --------
+ * Artificial data for testing purposes. */
+function mockUp() {
+	// chapter 1
+	var infowindow = new google.maps.InfoWindow({
+	content: '<h4>Moved to the Bay Area</h4>' +
+			'<p><b>Year: 1997</b></p>' +
+			'<p>My earliest memories are all of the West Coast. My parents moved here because ' +
+			'of all of the jobs available. We lived in an apartment.</p>'
+	});
+
+	var marker = new google.maps.Marker({
+		position: new google.maps.LatLng(37.35263822194673, -121.96969985961914),
+		map: map
+	});
+
+	var event_entry = {
+		year: "1997",
+		details: 'My earliest memories are all of the West Coast. My parents moved here because ' +
+			'of all of the jobs available. We lived in an apartment.',
+		title: "Moved to the Bay Area",
+		infowindow: infowindow,
+		marker: marker
+	};
+
+	// new entry is added to all events, array is sorted and lines are redrawn
+	allEvents[allEvents.length] = event_entry;
+	allEvents.sort(function(a, b) {
+		var dateA = new Date(a.year);
+		var dateB = new Date(b.year);
+		return dateA - dateB;
+	});
+	redrawAllLines();
+
+	google.maps.event.addListener(marker, 'click', function(e) {
+		if (openInfoWindow)
+			openInfoWindow.close();
+		infowindow.open(map, marker);
+		openInfoWindow = infowindow;
+	});
+
+	// chapter 2
+	/*var infowindow = new google.maps.InfoWindow({
+	content: '<h4>' + $("#event-name").val() + '</h4>' +
+			'<p><b>Year:</b> ' + $("#year").val() + '</p>' +
+			'<p>' + $("#details").val() + '</p>'
+	});
+
+	var marker = new google.maps.Marker({
+		position: currentLocation,
+		map: map
+	});
+
+	var event_entry = {
+		year: $("#year").val(),
+		infowindow: infowindow,
+		marker: marker
+	};
+
+	// new entry is added to all events, array is sorted and lines are redrawn
+	allEvents[allEvents.length] = event_entry;
+	allEvents.sort(function(a, b) {
+		var dateA = new Date(a.year);
+		var dateB = new Date(b.year);
+		return dateA - dateB;
+	});
+	redrawAllLines();
+
+	google.maps.event.addListener(marker, 'click', function(e) {
+		if (openInfoWindow)
+			openInfoWindow.close();
+		infowindow.open(map, marker);
+		openInfoWindow = infowindow;
+	});*/
 }
 
 function placeMarker(location) {
@@ -73,7 +151,9 @@ function postEntry() {
 
 	var event_entry = {
 		year: $("#year").val(),
-		info: infowindow,
+		details: $("#details").val(),
+		title: $("#event-name").val(),
+		infowindow: infowindow,
 		marker: marker
 	};
 
@@ -84,7 +164,7 @@ function postEntry() {
 		var dateB = new Date(b.year);
 		return dateA - dateB;
 	});
-	redrawLines();
+	redrawAllLines();
 
 	google.maps.event.addListener(marker, 'click', function(e) {
 		if (openInfoWindow)
@@ -94,7 +174,7 @@ function postEntry() {
 	});
 }
 
-function redrawLines() {
+function redrawAllLines() {
 	removeAllLines();
 
 	for (var index = 1; index < allEvents.length; index++)
@@ -157,6 +237,10 @@ function startJourney() {
 		return;
 
 	google.maps.event.removeListener(placeMarkerListener);
+	$("a").click(function(e) {
+		e.stopPropagation();
+	});
+
 	removeAllLines();
 	$("#btnStartJourney").attr("disabled", "disabled");
 	$("#btnExitJourney").removeAttr("disabled");
@@ -164,24 +248,29 @@ function startJourney() {
 
 	focusOnChapter(numChapter);
 
-	$("#googleMap").click(function(e) {
-		if (numChapter > 0) {
-			createDashedLine(allEvents[numChapter - 1].marker.getPosition(), allEvents[numChapter].marker.getPosition());
-			bounds = new google.maps.LatLngBounds();
-			bounds.extend(allEvents[numChapter].marker.getPosition());
-			bounds.extend(allEvents[numChapter - 1].marker.getPosition());
-			map.fitBounds(bounds);
-		}
+	if (allEvents.length > 1) {
+		$("#googleMap").click(function(e) {
+			if (e.target.nodeName.toUpperCase() == "A" || e.target.nodeName.toUpperCase() == "BUTTON")
+				return;
 
-		focusOnChapter(numChapter);
+			if (numChapter > 0) {
+				createDashedLine(allEvents[numChapter - 1].marker.getPosition(), allEvents[numChapter].marker.getPosition());
+				bounds = new google.maps.LatLngBounds();
+				bounds.extend(allEvents[numChapter].marker.getPosition());
+				bounds.extend(allEvents[numChapter - 1].marker.getPosition());
+				map.fitBounds(bounds);
+			}
 
-		if (numChapter >= allEvents.length)
-			endJourney();
-	});
+			focusOnChapter(numChapter);
+		});
+	}
 }
 
+/* endJourney()
+ * ------------
+ * Returns user to editing mode. */
 function endJourney() {
-	redrawLines();
+	redrawAllLines();
 	placeMarkerListener = google.maps.event.addListener(map, 'click', function(event) {
 		if (openInfoWindow) 
 			openInfoWindow.close();
@@ -189,17 +278,42 @@ function endJourney() {
 	});
 
 	$("#googleMap").off("click");
+	$("a").off("click");
 	$("#btnStartJourney").removeAttr("disabled");
 	$("#btnExitJourney").attr("disabled", "disabled");
 }
 
 function focusOnChapter(index) {
-	map.setCenter(allEvents[index].marker.getPosition());
+	var chapter = allEvents[index];
+	map.setCenter(chapter.marker.getPosition());
 	if (openInfoWindow)
 		openInfoWindow.close();
-	allEvents[numChapter].info.open(map, allEvents[numChapter].marker);
-	openInfoWindow = allEvents[numChapter].info;
+
+	var shortContent = chapter.details;
+	if (shortContent.length > 50)
+		shortContent = shortContent.substr(0, 50) + "...";
+
+	var infowindow = new google.maps.InfoWindow({
+		content: '<h4>' + chapter.title + '</h4>' +
+			'<p><b>Year:</b> ' + chapter.year + '</p>' +
+			'<p>' + shortContent + '</p>' +
+			'<button type="button" id="btnReadMore" class="btn btn-block btn-success">Read More</button>'
+	});
+	infowindow.open(map, chapter.marker);
+
+	$("#btnReadMore").click(function(e) {
+		$("#modal-title").text(chapter.title);
+		$("#modal-year").text(chapter.year);
+		$("#modal-details").text(chapter.details);
+		$('#modal-chapter').foundation('reveal', 'open');
+
+	});
+
+	openInfoWindow = infowindow;
 	numChapter++;
+
+	if (numChapter >= allEvents.length)
+		endJourney();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
