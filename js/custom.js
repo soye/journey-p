@@ -56,10 +56,10 @@ function initialize() {
 function mockUp() {
 	// chapter 1
 	var infowindow = new google.maps.InfoWindow({
-	content: '<h4>Moved to the Bay Area</h4>' +
-			'<p><b>Year: 1997</b></p>' +
-			'<p>My earliest memories are all of the West Coast. My parents moved here because ' +
-			'of all of the jobs available. We lived in an apartment.</p>'
+	content: '<h4>Born in the Bay Area</h4>' +
+			'<p><b>Year: 1932</b></p>' +
+			'<p>I was born in the lovely town of Santa Clara in 1932. ' +
+			'I lived in a large house with my parents and my three older sisters.</p>'
 	});
 
 	var marker = new google.maps.Marker({
@@ -68,10 +68,10 @@ function mockUp() {
 	});
 
 	var event_entry = {
-		year: "1997",
-		details: 'My earliest memories are all of the West Coast. My parents moved here because ' +
-			'of all of the jobs available. We lived in an apartment.',
-		title: "Moved to the Bay Area",
+		year: "1932",
+		details: 'I was born in the lovely town of Santa Clara in 1932. ' +
+			'I lived in a large house with my parents and my three older sisters.',
+		title: "Born in the Bay Area",
 		infowindow: infowindow,
 		marker: marker
 	};
@@ -242,8 +242,12 @@ function startJourney() {
 	});
 
 	removeAllLines();
-	$("#btnStartJourney").attr("disabled", "disabled");
-	$("#btnExitJourney").removeAttr("disabled");
+	$("#btnStartJourney").attr("style", "display:none");
+	$("#btnViewEntireJourney").attr("style", "display:none");
+	$("#header").attr("style", "display:none");
+	//$("#btnExitJourney").removeAttr("style");
+	//$("#btnExitJourney").attr("style", "");
+	$("#overlay").removeAttr("style");
 	numChapter = 0;
 
 	focusOnChapter(numChapter);
@@ -279,8 +283,11 @@ function endJourney() {
 
 	$("#googleMap").off("click");
 	$("a").off("click");
-	$("#btnStartJourney").removeAttr("disabled");
-	$("#btnExitJourney").attr("disabled", "disabled");
+	$("#header").removeAttr("style");
+	//$("#btnExitJourney").attr("style", "display:none");
+	$("#overlay").attr("style", "display:none");	
+	$("#btnViewEntireJourney").removeAttr("style");
+	$("#btnStartJourney").removeAttr("style");
 }
 
 function focusOnChapter(index) {
@@ -297,16 +304,15 @@ function focusOnChapter(index) {
 		content: '<h4>' + chapter.title + '</h4>' +
 			'<p><b>Year:</b> ' + chapter.year + '</p>' +
 			'<p>' + shortContent + '</p>' +
-			'<button type="button" id="btnReadMore" class="btn btn-block btn-success">Read More</button>'
+			'<button type="button" id="btnReadMore" class="btn btn-block btn-success">See More</button>'
 	});
 	infowindow.open(map, chapter.marker);
 
 	$("#btnReadMore").click(function(e) {
 		$("#modal-title").text(chapter.title);
-		$("#modal-year").text(chapter.year);
-		$("#modal-details").text(chapter.details);
+		/*$("#modal-year").text(chapter.year);
+		$("#modal-details").text(chapter.details);*/
 		$('#modal-chapter').foundation('reveal', 'open');
-
 	});
 
 	openInfoWindow = infowindow;

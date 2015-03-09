@@ -8,41 +8,47 @@
 	</head>
 
 	<body>
-    <div id="header">
-      <h1>journey</h1>
-      <button type="button" id="btnViewEntireJourney" class="btn btn-default" onclick="showAll();">View Entire Journey</button>&nbsp;
-      <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Start Journey</button>&nbsp;
-      <button type="button" id="btnExitJourney" class="btn btn-warning" onclick="endJourney();" disabled="disabled">Return to Editing</button>
-    </div>
+    <div id="container">
+      <div id="header" style="">
+        <h1>journey</h1>
+        <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Start Journey</button> 
+        <button type="button" id="btnViewEntireJourney" class="btn btn-default" onclick="showAll();">See All</button>
+      </div>
 
-		<div id="googleMap"></div>
-		<div>
-     		<a href="#" data-reveal-id="modal-form" style="display:none"></a> 
-        <div id="modal-form" class="reveal-modal" data-reveal> 
-          <h2>Tell us about what happened.</h2>
-          <form id="form">
-            What was the event?<br />
-            <input type="text" id="event-name"><br />
-            When was this?<br />
-            <input type="month" id="year"><br />
-            Tell us a little more.<br />
-            <textarea id="details" cols="50" rows="5"></textarea><br />
-            <button type="button" class="btn btn-success" onclick="postEntry(this);" id="submit">Post Entry</button>
-          </form>
-          <a class="close-reveal-modal">&#215;</a> 
-        </div>
+  		<div id="googleMap"></div>
 
-        <a href="#" data-reveal-id="modal-chapter" style="display:none"></a> 
-        <div id="modal-chapter" class="reveal-modal" data-reveal> 
-          <h3 id="modal-title"></h3>
-          <h5 id="modal-year"></h5>
-          <p id="modal-details"></p>
-          <div class="iframe">
-            <iframe scrolling="auto" allowtransparency="true" name="main" src="animation.html"> </iframe>
+      <div id="overlay" style="display:none">
+        <button type="button" id="btnExitJourney" class="btn btn-warning" onclick="endJourney();">Return to Editing</button>
+      </div>
+  		
+      <div>
+       		<a href="#" data-reveal-id="modal-form" style="display:none"></a> 
+          <div id="modal-form" class="reveal-modal" data-reveal> 
+            <h2>Tell us about what happened.</h2>
+            <form id="form">
+              What was the event?<br />
+              <input type="text" id="event-name"><br />
+              When was this?<br />
+              <input type="month" id="year"><br />
+              Tell us a little more.<br />
+              <textarea id="details" cols="50" rows="5"></textarea><br />
+              <button type="button" class="btn btn-success" onclick="postEntry(this);" id="submit">Post Entry</button>
+            </form>
+            <a class="close-reveal-modal">&#215;</a> 
           </div>
-          <a class="close-reveal-modal">&#215;</a> 
-        </div>
-		</div>	
+
+          <a href="#" data-reveal-id="modal-chapter" style="display:none"></a> 
+          <div id="modal-chapter" class="reveal-modal" data-reveal> 
+            <h3 id="modal-title"></h3>
+            <h5 id="modal-year"></h5>
+            <p id="modal-details"></p>
+            <div class="iframe">
+              <iframe scrolling="auto" allowtransparency="true" name="main" src="animation.html"> </iframe>
+            </div>
+            <a class="close-reveal-modal">&#215;</a> 
+          </div>
+  		</div>	
+    </div>
 
 
     <script src="http://maps.googleapis.com/maps/api/js"></script>
