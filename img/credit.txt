@@ -1,12 +1,22 @@
-Credit for images found
+Credit for Images Used
 ===================
 
 Jamison Wieser for the Noun Project
 CC By 3.0 (http://creativecommons.org/licenses/by/3.0/us/)
 Resized
-arrow_next.png
+arrow_next*.png
 
 Stefan Parnarov for the Noun Project
 CC By 3.0
 Resized
-home.png
+home*.png
+
+Mert Gutav for the Noun Project
+CC By 3.0
+Resized
+stroller*.png
+
+John Caserta
+CC By 3.0
+Resized
+poi*.png
