@@ -67,6 +67,34 @@ function initialize() {
  * --------
  * Artificial data for testing purposes. */
 function mockUp() {
+	// custom markers
+	var imgStroller = {
+	    url: 'img/stroller_30x30.png',
+		size: new google.maps.Size(30, 27),
+		// The origin for this image is 0,0.
+		origin: new google.maps.Point(0,0),
+		// The anchor for this image is the base of the flagpole at 0,32.
+		anchor: new google.maps.Point(15, 27)
+	};
+
+	var shapeStroller = {
+		coords: [0, 7, 6, 10, 17, 10, 16, 0, 23, 0, 29, 5, 29, 19, 25, 26, 7, 26, 5, 17, 4, 13, 0, 9],
+		type: 'poly'
+	};
+
+	var imgHome = {
+	    url: 'img/home_30x26.png',
+		size: new google.maps.Size(30, 26),
+		origin: new google.maps.Point(0,0),
+		anchor: new google.maps.Point(15, 26)
+	};
+
+	var shapeHome = {
+		coords: [0, 13, 15, 0, 24, 3, 29, 12, 26, 25, 2, 25, 3, 15], 
+		type: 'poly'
+	};
+
+
 	// chapter 1
 	var infowindow = new google.maps.InfoWindow({
 	content: '<h4>Born in the Bay Area</h4>' +
@@ -77,7 +105,9 @@ function mockUp() {
 
 	var marker = new google.maps.Marker({
 		position: new google.maps.LatLng(37.35263822194673, -121.96969985961914),
-		map: map
+		map: map, 
+		icon: imgStroller,
+		shape: shapeStroller
 	});
 
 	var event_entry = {
@@ -104,6 +134,48 @@ function mockUp() {
 		infowindow.open(map, marker);
 		openInfoWindow = infowindow;
 	});
+
+
+	// chapter 2
+	var infowindow2 = new google.maps.InfoWindow({
+		content: '<h4>Moved to Our Current Home in Austin</h4>' +
+			'<p><b>Year: 1980</b></p>' +
+			'<p>Jim and I moved to Austin in 1980 to be closer to our children. ' +
+			'Believe it or not, we really enjoy attending the music festivals every year!</p>'
+	});
+
+	var marker2 = new google.maps.Marker({
+		position: new google.maps.LatLng(30.26729082565207, -97.646484375),
+		map: map, 
+		icon: imgHome,
+		shape: shapeHome
+	});
+
+	var event_entry2 = {
+		year: "1980",
+		details: 'I was born in the lovely town of Santa Clara in 1932. ' +
+			'I lived in a large house with my parents and my three older sisters.',
+		title: "Born in the Bay Area",
+		infowindow: infowindow2,
+		marker: marker2
+	};
+
+	// new entry is added to all events, array is sorted and lines are redrawn
+	allEvents[allEvents.length] = event_entry2;
+	allEvents.sort(function(a, b) {
+		var dateA = new Date(a.year);
+		var dateB = new Date(b.year);
+		return dateA - dateB;
+	});
+	redrawAllLines();
+
+	google.maps.event.addListener(marker2, 'click', function(e) {
+		if (openInfoWindow)
+			openInfoWindow.close();
+		infowindow2.open(map, marker2);
+		openInfoWindow = infowindow2;
+	});
+
 }
 
 function placeMarker(location) {
@@ -123,9 +195,26 @@ function postEntry() {
 			'<p>' + $("#details").val() + '</p>'
 	});
 
+	var imgMarker = {
+	    url: 'img/poi_19x30.png',
+		size: new google.maps.Size(19, 30),
+		// The origin for this image is 0,0.
+		origin: new google.maps.Point(0,0),
+		// The anchor for this image is the base of the flagpole at 0,32.
+		anchor: new google.maps.Point(10, 30)
+	};
+
+	var shapeMarker = {
+		coords: [0, 6, 6, 0, 13, 0, 18, 6, 18, 13, 9, 29, 0, 13],
+		type: 'poly'
+	};
+
+
 	var marker = new google.maps.Marker({
 		position: currentLocation,
-		map: map
+		map: map, 
+		icon: imgMarker, 
+		shape: shapeMarker
 	});
 
 	var event_entry = {
