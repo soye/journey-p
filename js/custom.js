@@ -153,9 +153,9 @@ function mockUp() {
 
 	var event_entry2 = {
 		year: "1980",
-		details: 'I was born in the lovely town of Santa Clara in 1932. ' +
-			'I lived in a large house with my parents and my three older sisters.',
-		title: "Born in the Bay Area",
+		details: 'Jim and I moved to Austin in 1980 to be closer to our children. ' +
+			'Believe it or not, we really enjoy attending the music festivals every year!',
+		title: "Moved to Our Current Home in Austin",
 		infowindow: infowindow2,
 		marker: marker2
 	};
