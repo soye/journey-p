@@ -388,8 +388,8 @@ function focusOnChapter(index) {
 		endJourney();
 }
 
-function playAudio() {
-  $('.player_audio').trigger("play");
+function startAudioSequence(){
+  $('.player_audio')[0].play();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

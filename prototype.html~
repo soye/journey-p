@@ -16,10 +16,9 @@
         </audio>
         <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Start Journey</button> 
         <button type="button" id="btnViewEntireJourney" class="btn btn-default" onclick="showAll();">See All</button>
-        <button type="button" id="manualAudio" class="btn btn-default"
-          onclick="playAudio();" value="Play Audio">Play
+        <button type="button" id="playAudioInstructions" class="btn btn-default"
+          onclick="startAudioSequence();">Play
           Audio Instructions</button>
-        <p/><textarea id="voiceinput"></textarea>
       </div>
 
   		<div id="googleMap"></div>

@@ -388,7 +388,7 @@ function focusOnChapter(index) {
 		endJourney();
 }
 
-function playAudio() {
+function startAudioSequence(){
   $('.player_audio')[0].play();
 }
 
