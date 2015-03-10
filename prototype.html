@@ -11,8 +11,14 @@
     <div id="container">
       <div id="header" style="">
         <h1>journey</h1>
+        <audio class="player_audio" type="hidden">
+          <source src="aud1.m4a" type="audio/mp4">
+        </audio>
         <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Start Journey</button> 
         <button type="button" id="btnViewEntireJourney" class="btn btn-default" onclick="showAll();">See All</button>
+        <button type="button" id="manualAudio" class="btn btn-default"
+          onclick="playAudio();" value="Play Audio">Play
+          Audio Instructions</button>
       </div>
 
   		<div id="googleMap"></div>
@@ -51,16 +57,17 @@
   		</div>	
     </div>
 
-
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/fastclick.js"></script>
     <script src="js/foundation.min.js"></script>
     <script src="js/custom.js"></script>
 
+
     <script> 
       $(document).foundation(); 
     </script>
+
   </body>
 
 </html>

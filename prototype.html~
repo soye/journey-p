@@ -8,40 +8,25 @@
 	</head>
 
 	<body>
-<<<<<<< HEAD
-    <div id="header">
-      <h1>journey</h1>
-		    <span id="recording-indicator" style="border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; width: 10px; height: 10px; background: red;"></span>
-
-		<div id="googleMap"></div>
-		<div>
-     		<a href="#" data-reveal-id="modal-form" style="display:none"></a> 
-
-        <div id="modal-form" class="reveal-modal" data-reveal> 
-          <h2>Tell us about what happened.</h2>
-          <form id="form">
-            What was the event?<br />
-            <input type="text" id="event-name"><br />
-            When was this?<br />
-            <input type="month" id="year"><br />
-            Tell us a little more.<br />
-            <textarea id="details" cols="50" rows="5"></textarea><br />
-            <button type="button" onclick="postEntry(this);" id="submit">Post Entry</button>
-          <a class="close-reveal-modal">&#215;</a> 
-        </div>
-		</div>
-=======
     <div id="container">
       <div id="header" style="">
         <h1>journey</h1>
+        <audio class="player_audio" type="hidden">
+          <source src="aud1.m4a" type="audio/mp4">
+        </audio>
         <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Start Journey</button> 
         <button type="button" id="btnViewEntireJourney" class="btn btn-default" onclick="showAll();">See All</button>
+        <button type="button" id="manualAudio" class="btn btn-default"
+          onclick="playAudio();" value="Play Audio">Play
+          Audio Instructions</button>
+        <p/><textarea id="voiceinput"></textarea>
       </div>
 
   		<div id="googleMap"></div>
 
       <div id="overlay" style="display:none">
         <button type="button" id="btnExitJourney" class="btn btn-warning" onclick="endJourney();">Return to Editing</button>
+        <a href="#" id="link-next"><img id="btnNext" src="img/arrow_next_60x60.png"></a>
       </div>
   		
       <div>
@@ -73,17 +58,17 @@
   		</div>	
     </div>
 
->>>>>>> 8d415a7f3224b52fc79dcbf946a12e14ff9deaeb
-
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/fastclick.js"></script>
     <script src="js/foundation.min.js"></script>
     <script src="js/custom.js"></script>
 
+
     <script> 
       $(document).foundation(); 
     </script>
+
   </body>
 
 </html>
