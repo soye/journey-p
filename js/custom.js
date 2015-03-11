@@ -56,9 +56,17 @@ function initialize() {
 	});
 
 	// hyperlink to next chapter using next button
-	$("#link-next").click(function(e) {
+	$("#btnNext").click(function(e) {
 		moveToNextChapter();
 	});
+
+	// close focus on chapter
+	$("#modal-chapter .close-reveal-modal").click(function(e) {
+		$('#modal-chapter').foundation('reveal', 'close');
+	});
+
+	//watermark input field for time
+	//$("#year").watermark("e.g. 1964, or December 13, 2000");
 
 	mockUp();
 }
@@ -384,8 +392,13 @@ function focusOnChapter(index) {
 	openInfoWindow = infowindow;
 	numChapter++;
 
-	if (numChapter >= allEvents.length)
+	if (numChapter >= allEvents.length) {
 		endJourney();
+	}
+}
+
+function askMe() {
+	alert("random question goes here!");
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
