@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="css/foundation.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+
 	</head>
 
 	<body>
@@ -14,12 +15,10 @@
         <audio class="player_audio" type="hidden">
           <source src="aud1.m4a" type="audio/mp4">
         </audio>
-        <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Start Journey</button> 
+        <span style="text-align: center">Click anywhere on the map to add an event to your Journey.</span>
+        <button style="button" id="btnAskMe" class="btn btn-info" onclick="askMe();">Ask Me!</button>
+        <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Preview</button> 
         <button type="button" id="btnViewEntireJourney" class="btn btn-default" onclick="showAll();">See All</button>
-        <button type="button" id="playAudioInstructions" class="btn btn-default"
-          onclick="startAudioSequence();">Play
-          Audio Instructions</button>
-        <input lang=”en” x-webkit-speech>
       </div>
 
   		<div id="googleMap"></div>
@@ -32,14 +31,18 @@
       <div>
        		<a href="#" data-reveal-id="modal-form" style="display:none"></a> 
           <div id="modal-form" class="reveal-modal" data-reveal> 
-            <h2>Tell us about what happened.</h2>
+            <h2 id="modal-form-h2">Tell us about what happened.</h2>
             <form id="form">
               What was the event?<br />
-              <input type="text" id="event-name"><br />
+              <input type="text" class="form-control" id="event-name"><br />
               When was this?<br />
-              <input type="month" id="year"><br />
+              <input type="month" class="form-control" id="year" placeholder="e.g. 1964, or December 13, 2000"><br />
+              <span id="location-field" style="display:none">
+                Where was this?<br />
+                <input type="text" class="form-control" id="location" placeholder="e.g. Stanford University, Stanford, CA, USA"><br />
+              </span>
               Tell us a little more.<br />
-              <textarea id="details" cols="50" rows="5"></textarea><br />
+              <textarea id="details" class="form-control" rows="5"></textarea><br />
               <button type="button" class="btn btn-success" onclick="postEntry(this);" id="submit">Post Entry</button>
             </form>
             <a class="close-reveal-modal">&#215;</a> 
@@ -50,6 +53,8 @@
             <h3 id="modal-title"></h3>
             <h5 id="modal-year"></h5>
             <p id="modal-details"></p>
+            <p id="modal-chapter-instructions">Please click on the photo below. Then, use your arrow keys to navigate.<br>
+              This presentation will loop, so please exit when you're ready to go on.</p>
             <div class="iframe">
               <iframe scrolling="auto" allowtransparency="true" name="main" src="animation.html"> </iframe>
             </div>
@@ -63,7 +68,19 @@
     <script src="js/fastclick.js"></script>
     <script src="js/foundation.min.js"></script>
     <script src="js/custom.js"></script>
+    <script src="js/impress.js"></script>
 
+    <script
+      src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.5.0/annyang.min.js"></script>
+    <script>
+      if (aanyang) {
+        var commands = {
+              'hello': function() { alert('Hello world!'); }
+            };
+        annyang.addCommands(commands);
+        annyang.start();
+      }
+    </script>
 
     <script> 
       $(document).foundation(); 

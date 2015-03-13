@@ -19,7 +19,6 @@
         <button style="button" id="btnAskMe" class="btn btn-info" onclick="askMe();">Ask Me!</button>
         <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Preview</button> 
         <button type="button" id="btnViewEntireJourney" class="btn btn-default" onclick="showAll();">See All</button>
-        <button type="button" id="playAudioInstructions" class="btn btn-default" onclick="startAudioSequence();">Play Audio Instructions</button>
       </div>
 
   		<div id="googleMap"></div>
@@ -70,6 +69,19 @@
     <script src="js/foundation.min.js"></script>
     <script src="js/custom.js"></script>
     <script src="js/impress.js"></script>
+
+    <script
+      src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.5.0/annyang.min.js"></script>
+    <script>
+      if (aanyang) {
+        var commands = {
+          'ask me': function() { $("#btnAskMe").click(); },
+              'hello': function() { alert('Hello world!'); }
+            };
+        annyang.addCommands(commands);
+        annyang.start();
+      }
+    </script>
 
     <script> 
       $(document).foundation(); 
