@@ -52,26 +52,10 @@ function initialize() {
 	];
 	map.setOptions({styles: styles});
 
-	// animation of button to next chapter
-	$(document).delegate('#btnNext', 'mouseover', function() {
-	   $(this).fadeTo(500, 1);
-	});
-	$(document).delegate('#btnNext', 'mouseout', function() {
-	   $(this).fadeTo(500, 0.6);
-	});
-
-	// hyperlink to next chapter using next button
-	$("#btnNext").click(function(e) {
-		moveToNextChapter();
-	});
-
 	// close focus on chapter
 	$("#modal-chapter .close-reveal-modal").click(function(e) {
 		$('#modal-chapter').foundation('reveal', 'close');
 	});
-
-	//watermark input field for time
-	//$("#year").watermark("e.g. 1964, or December 13, 2000");
 
 	mockUp();
 }
@@ -143,8 +127,14 @@ function mockUp() {
 
 	google.maps.event.addListener(marker, 'click', function(e) {
 		closeOpenInfoWindow();
-		infowindow.open(map, marker);
-		openInfoWindow = infowindow;
+		numChapter = getIndex(marker);
+		focusOnChapter(getIndex(marker));
+	});
+
+	google.maps.event.addListener(marker, 'mouseover', function(e) {
+		closeOpenInfoWindow();
+		numChapter = getIndex(marker);
+		focusOnChapter(getIndex(marker));
 	});
 
 
@@ -183,10 +173,13 @@ function mockUp() {
 
 	google.maps.event.addListener(marker2, 'click', function(e) {
 		closeOpenInfoWindow();
-		infowindow2.open(map, marker2);
-		openInfoWindow = infowindow2;
+		numChapter = getIndex(marker2);
+		focusOnChapter(getIndex(marker2));
 	});
 
+	google.maps.event.addListener(marker2, 'mouseover', function(e) {
+		focusOnChapter(getIndex(marker2));
+	});
 }
 
 function placeMarker(location) {
@@ -260,29 +253,19 @@ function processEntry() {
 
 	google.maps.event.addListener(marker, 'click', function(e) {
 		closeOpenInfoWindow();
-		//infowindow.open(map, marker);
-		//openInfoWindow = infowindow;
-		focusOnChapter(getIndex(marker));
+		numChapter = getIndex(marker);
+		focusOnChapter(numChapter);
 	});
 
 	google.maps.event.addListener(marker, 'mouseover', function(e) {
-
-		infowindow.open(map, marker);
-		openInfoWindow = infowindow;
-
-		google.maps.event.addListener(marker, 'mouseout', function(e) {
-			infowindow.close(map, marker);
-			openInfoWindow = null;
-		});
+		focusOnChapter(getIndex(marker));
 	});
 }
 
 function getIndex(marker) {
 	for (var i = 0; i < allEvents.length; i++) {
-		if (allEvents[i].marker == marker) {
-			alert("got it: " + i);
+		if (allEvents[i].marker == marker)
 			return i;
-		}
 	}
 }
 
@@ -368,10 +351,6 @@ function startJourney() {
 	});
 
 	removeAllLines();
-	$("#btnStartJourney").attr("style", "display:none");
-	$("#btnViewEntireJourney").attr("style", "display:none");
-	$("#header").attr("style", "display:none");
-	$("#overlay").removeAttr("style");
 	numChapter = 0;
 
 	focusOnChapter(numChapter);
@@ -386,11 +365,14 @@ function startJourney() {
 }
 
 function moveToNextChapterFromModal() {
+	closeOpenInfoWindow();
 	$('#modal-chapter').foundation('reveal', 'close');
 	window.setTimeout(moveToNextChapter(), 2000);
 }
 
 function moveToNextChapter() {
+	numChapter++;
+
 	if (numChapter > 0) {
 		createDashedLine(allEvents[numChapter - 1].marker.getPosition(), allEvents[numChapter].marker.getPosition());
 		bounds = new google.maps.LatLngBounds();
@@ -421,19 +403,11 @@ function endJourney() {
 		closeOpenInfoWindow();
 		placeMarker(event.latLng);
 	});
-
-	$("#googleMap").off("click");
-	$("a").off("click");
-	$("#header").removeAttr("style");
-	$("#overlay").attr("style", "display:none");	
-	$("#btnViewEntireJourney").removeAttr("style");
-	$("#btnStartJourney").removeAttr("style");
 }
 
-function focusOnChapter(index) {
-	var chapter = allEvents[index];
-	map.setCenter(chapter.marker.getPosition());
+function openShortInfoWindow(chapter) {
 	closeOpenInfoWindow();
+	numChapter = getIndex(chapter.marker);
 
 	var shortContent = chapter.details;
 	if (shortContent.length > 50)
@@ -443,20 +417,32 @@ function focusOnChapter(index) {
 		content: '<h4>' + chapter.title + '</h4>' +
 			'<p><b>Year:</b> ' + chapter.year + '</p>' +
 			'<p>' + shortContent + '</p>' +
-			'<button type="button" id="btnReadMore" class="btn btn-block btn-success">See More</button>'
+			'<button type="button" id="btnReadMore" onclick="seeMore(\'' + chapter.title + '\');" class="btn btn-block btn-success">See More</button>'
 	});
+
 	infowindow.open(map, chapter.marker);
-
-	$("#btnReadMore").click(function(e) {
-		$("#modal-title").text(chapter.title);
-		$('#modal-chapter').foundation('reveal', 'open');
-	});
-
 	openInfoWindow = infowindow;
-	numChapter++;
+	return infowindow;
+}
 
-	if (numChapter >= allEvents.length)
+function seeMore(title) {
+	$("#modal-title").text(title);
+	$('#modal-chapter').foundation('reveal', 'open');
+}
+
+function focusOnChapter(index) {
+	numChapter = index;
+	var chapter = allEvents[index];
+	map.setCenter(chapter.marker.getPosition());
+	closeOpenInfoWindow();
+	openShortInfoWindow(chapter);
+
+	if (index >= allEvents.length - 1) {
+		$("#btnNextChapter").attr("style", "display:none");
 		endJourney();
+	} else {
+		$("#btnNextChapter").removeAttr("style");
+	}
 }
 
 function askMe() {
@@ -465,8 +451,20 @@ function askMe() {
 	$('#modal-form').foundation('reveal', 'open');
 }
 
-function startAudioSequence(){
+function startAudioSequence() {
+  var recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
   $('.player_audio')[0].play();
+  setTimeout(function() { alert("here"); }, 4000);
+  recognition.onresult = function (event) {
+    for (var i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) alert("voice input: " + event.results[i][0].transcript);
+    }
+  };
+  recognition.start();
+  var timeoutID2 = window.setTimeout(function() { }, 5000);
+  recognition.stop();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

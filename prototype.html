@@ -17,9 +17,9 @@
         </audio>
         <span style="text-align: center">Click anywhere on the map to add an event to your Journey.</span>
         <button style="button" id="btnAskMe" class="btn btn-info" onclick="askMe();">Ask Me!</button>
-        <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Preview</button> 
+        <button type="button" id="btnStartJourney" class="btn btn-success" onclick="startJourney();">Start at the Beginning</button> 
         <button type="button" id="btnViewEntireJourney" class="btn btn-default" onclick="showAll();" style="display:none">See All</button>
-        <button type="button" id="playAudioInstructions" class="btn btn-default" onclick="startAudioSequence();">Play Audio Instructions</button>
+        <button type="button" id="playAudioInstructions" class="btn btn-default" onclick="startAudioSequence();" style="display:none">Play Audio Instructions</button>
       </div>
 
   		<div id="googleMap"></div>
@@ -56,7 +56,7 @@
             <p id="modal-details"></p>
             <p id="modal-chapter-instructions">Please click on the photo below. Then, use your arrow keys to navigate.<br>
               This presentation will loop, so please exit when you're ready to go on.
-              <button type="button" class="pull-right btn btn-success" onclick="moveToNextChapterFromModal();">Next Chapter</button>
+              <button type="button" class="pull-right btn btn-success" id="btnNextChapter" onclick="moveToNextChapterFromModal();">Next Chapter</button>
             </p>
             <div class="iframe">
               <iframe scrolling="auto" allowtransparency="true" name="main" src="animation.html"> </iframe>
@@ -72,6 +72,17 @@
     <script src="js/foundation.min.js"></script>
     <script src="js/custom.js"></script>
     <script src="js/impress.js"></script>
+    <script src="js/annyang.min.js"></script>
+    <!--<script>
+      if (aanyang) {
+        var commands = {
+          'ask me': function() { $("#btnAskMe").click(); },
+              'hello': function() { alert('Hello world!'); }
+            };
+        annyang.addCommands(commands);
+        annyang.start();
+      }
+    </script>-->
 
     <script> 
       $(document).foundation(); 
