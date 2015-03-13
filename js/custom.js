@@ -24,8 +24,7 @@ function initialize() {
 	map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
 	placeMarkerListener = google.maps.event.addListener(map, 'click', function(event) {
-		if (openInfoWindow) 
-			openInfoWindow.close();
+		closeOpenInfoWindow();
 		placeMarker(event.latLng);
 	});
 
@@ -143,8 +142,7 @@ function mockUp() {
 	redrawAllLines();
 
 	google.maps.event.addListener(marker, 'click', function(e) {
-		if (openInfoWindow)
-			openInfoWindow.close();
+		closeOpenInfoWindow();
 		infowindow.open(map, marker);
 		openInfoWindow = infowindow;
 	});
@@ -184,8 +182,7 @@ function mockUp() {
 	redrawAllLines();
 
 	google.maps.event.addListener(marker2, 'click', function(e) {
-		if (openInfoWindow)
-			openInfoWindow.close();
+		closeOpenInfoWindow();
 		infowindow2.open(map, marker2);
 		openInfoWindow = infowindow2;
 	});
@@ -195,6 +192,7 @@ function mockUp() {
 function placeMarker(location) {
 	// opens the form
 	$('#form').trigger("reset");
+	$("#location-field").attr("style", "display:none");
 	$('#modal-form').foundation('reveal', 'open');
 
 	currentLocation = location;		
@@ -214,6 +212,9 @@ function codeAddress() {
   });
 }
 
+/* processEntry()
+ * --------------
+ * Takes the values from the form, and creates a marker and an infowindow. */
 function processEntry() {
 	var infowindow = new google.maps.InfoWindow({
 	content: '<h4>' + $("#event-name").val() + '</h4>' +
@@ -258,13 +259,37 @@ function processEntry() {
 	redrawAllLines();
 
 	google.maps.event.addListener(marker, 'click', function(e) {
-		if (openInfoWindow)
-			openInfoWindow.close();
+		closeOpenInfoWindow();
+		//infowindow.open(map, marker);
+		//openInfoWindow = infowindow;
+		focusOnChapter(getIndex(marker));
+	});
+
+	google.maps.event.addListener(marker, 'mouseover', function(e) {
+
 		infowindow.open(map, marker);
 		openInfoWindow = infowindow;
+
+		google.maps.event.addListener(marker, 'mouseout', function(e) {
+			infowindow.close(map, marker);
+			openInfoWindow = null;
+		});
 	});
 }
 
+function getIndex(marker) {
+	for (var i = 0; i < allEvents.length; i++) {
+		if (allEvents[i].marker == marker) {
+			alert("got it: " + i);
+			return i;
+		}
+	}
+}
+
+/* postEntry()
+ * -----------
+ * Processes the filled out form. If location is filled in, 
+ * then geocoder request is sent before processing the entry. */
 function postEntry() {
 	$('#modal-form').foundation('reveal', 'close');
 
@@ -337,6 +362,7 @@ function startJourney() {
 		return;
 
 	google.maps.event.removeListener(placeMarkerListener);
+
 	$("a").click(function(e) {
 		e.stopPropagation();
 	});
@@ -359,6 +385,11 @@ function startJourney() {
 	}
 }
 
+function moveToNextChapterFromModal() {
+	$('#modal-chapter').foundation('reveal', 'close');
+	window.setTimeout(moveToNextChapter(), 2000);
+}
+
 function moveToNextChapter() {
 	if (numChapter > 0) {
 		createDashedLine(allEvents[numChapter - 1].marker.getPosition(), allEvents[numChapter].marker.getPosition());
@@ -371,14 +402,23 @@ function moveToNextChapter() {
 	focusOnChapter(numChapter);
 }
 
+/* closeOpenInfoWindow()
+ * ---------------------
+ * If an infowindow is open, close it. */
+ function closeOpenInfoWindow() {
+ 	if (openInfoWindow) {
+		openInfoWindow.close();
+		openInfoWindow = null;
+	}
+ }
+
 /* endJourney()
  * ------------
  * Returns user to editing mode. */
 function endJourney() {
 	redrawAllLines();
 	placeMarkerListener = google.maps.event.addListener(map, 'click', function(event) {
-		if (openInfoWindow) 
-			openInfoWindow.close();
+		closeOpenInfoWindow();
 		placeMarker(event.latLng);
 	});
 
@@ -393,8 +433,7 @@ function endJourney() {
 function focusOnChapter(index) {
 	var chapter = allEvents[index];
 	map.setCenter(chapter.marker.getPosition());
-	if (openInfoWindow)
-		openInfoWindow.close();
+	closeOpenInfoWindow();
 
 	var shortContent = chapter.details;
 	if (shortContent.length > 50)
@@ -416,9 +455,8 @@ function focusOnChapter(index) {
 	openInfoWindow = infowindow;
 	numChapter++;
 
-	if (numChapter >= allEvents.length) {
+	if (numChapter >= allEvents.length)
 		endJourney();
-	}
 }
 
 function askMe() {
