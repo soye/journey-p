@@ -19,6 +19,7 @@
         <button type="button" id="playAudioInstructions" class="btn btn-default"
           onclick="startAudioSequence();">Play
           Audio Instructions</button>
+        <input lang=”en” x-webkit-speech>
       </div>
 
   		<div id="googleMap"></div>

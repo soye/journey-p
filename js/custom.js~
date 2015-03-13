@@ -388,8 +388,20 @@ function focusOnChapter(index) {
 		endJourney();
 }
 
-function startAudioSequence(){
+function startAudioSequence() {
+  var recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
   $('.player_audio')[0].play();
+  setTimeout(function() { alert("here"); }, 4000);
+  recognition.onresult = function (event) {
+    for (var i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) alert("voice input: " + event.results[i][0].transcript);
+    }
+  };
+  recognition.start();
+  var timeoutID2 = window.setTimeout(function() { }, 5000);
+  recognition.stop();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
