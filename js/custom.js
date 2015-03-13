@@ -1,3 +1,4 @@
+var geocoder = null;
 var map = null;
 var numChapter = 0;
 var openInfoWindow = null;
@@ -6,9 +7,14 @@ var lastMarker = null;
 var allEvents = [];
 var allLines = [];
 var placeMarkerListener = null;
+var askMeLines = ["Tell me about the first time you met your current spouse.",
+	"Tell me about your first full-time job.", "Tell me about the first time you went on an airplane.",
+	"Tell me about one of your favorite childhood memories.", "Tell me about the first date you ever went on."];
 
 
 function initialize() {
+	geocoder = new google.maps.Geocoder();
+
 	var mapProp = {
 		center:new google.maps.LatLng(39.828127,-98.579404), 
     	zoom: 5, 
@@ -56,9 +62,17 @@ function initialize() {
 	});
 
 	// hyperlink to next chapter using next button
-	$("#link-next").click(function(e) {
+	$("#btnNext").click(function(e) {
 		moveToNextChapter();
 	});
+
+	// close focus on chapter
+	$("#modal-chapter .close-reveal-modal").click(function(e) {
+		$('#modal-chapter').foundation('reveal', 'close');
+	});
+
+	//watermark input field for time
+	//$("#year").watermark("e.g. 1964, or December 13, 2000");
 
 	mockUp();
 }
@@ -186,9 +200,21 @@ function placeMarker(location) {
 	currentLocation = location;		
 }
 
-function postEntry() {
-	$('#modal-form').foundation('reveal', 'close');
+function codeAddress() {
+  var address = $("#location").val();
+  console.log($("#location").val());
+  geocoder.geocode( { 'address': address}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      currentLocation = results[0].geometry.location;
+      console.log("location = " + results[0].geometry.location.toString());
+      processEntry();
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
 
+function processEntry() {
 	var infowindow = new google.maps.InfoWindow({
 	content: '<h4>' + $("#event-name").val() + '</h4>' +
 			'<p><b>Year:</b> ' + $("#year").val() + '</p>' +
@@ -198,9 +224,7 @@ function postEntry() {
 	var imgMarker = {
 	    url: 'img/poi_19x30.png',
 		size: new google.maps.Size(19, 30),
-		// The origin for this image is 0,0.
 		origin: new google.maps.Point(0,0),
-		// The anchor for this image is the base of the flagpole at 0,32.
 		anchor: new google.maps.Point(10, 30)
 	};
 
@@ -208,7 +232,6 @@ function postEntry() {
 		coords: [0, 6, 6, 0, 13, 0, 18, 6, 18, 13, 9, 29, 0, 13],
 		type: 'poly'
 	};
-
 
 	var marker = new google.maps.Marker({
 		position: currentLocation,
@@ -240,6 +263,15 @@ function postEntry() {
 		infowindow.open(map, marker);
 		openInfoWindow = infowindow;
 	});
+}
+
+function postEntry() {
+	$('#modal-form').foundation('reveal', 'close');
+
+	if ($("#location").val().length > 0)
+		codeAddress();
+	else
+		processEntry();
 }
 
 function redrawAllLines() {
@@ -384,8 +416,15 @@ function focusOnChapter(index) {
 	openInfoWindow = infowindow;
 	numChapter++;
 
-	if (numChapter >= allEvents.length)
+	if (numChapter >= allEvents.length) {
 		endJourney();
+	}
+}
+
+function askMe() {
+	$("#location-field").removeAttr("style");
+	$("#modal-form-h2").text(askMeLines[Math.floor((Math.random() * 5))]);
+	$('#modal-form').foundation('reveal', 'open');
 }
 
 function startAudioSequence() {
