@@ -25,6 +25,7 @@ function initialize() {
 
 	placeMarkerListener = google.maps.event.addListener(map, 'click', function(event) {
 		closeOpenInfoWindow();
+		$("#placeMarkerInfo").text("");
 		placeMarker(event.latLng);
 	});
 
@@ -346,10 +347,6 @@ function startJourney() {
 
 	google.maps.event.removeListener(placeMarkerListener);
 
-	$("a").click(function(e) {
-		e.stopPropagation();
-	});
-
 	removeAllLines();
 	numChapter = 0;
 
@@ -359,7 +356,7 @@ function startJourney() {
 		$("#googleMap").click(function(e) {
 			if (e.target.nodeName.toUpperCase() == "A" || e.target.nodeName.toUpperCase() == "BUTTON")
 				return;
-			moveToNextChapter();
+			endJourney();
 		});
 	}
 }
@@ -399,6 +396,7 @@ function moveToNextChapter() {
  * Returns user to editing mode. */
 function endJourney() {
 	redrawAllLines();
+
 	placeMarkerListener = google.maps.event.addListener(map, 'click', function(event) {
 		closeOpenInfoWindow();
 		placeMarker(event.latLng);
@@ -410,8 +408,8 @@ function openShortInfoWindow(chapter) {
 	numChapter = getIndex(chapter.marker);
 
 	var shortContent = chapter.details;
-	if (shortContent.length > 50)
-		shortContent = shortContent.substr(0, 50) + "...";
+	/*if (shortContent.length > 50)
+		shortContent = shortContent.substr(0, 50) + "...";*/
 
 	var infowindow = new google.maps.InfoWindow({
 		content: '<h4>' + chapter.title + '</h4>' +
